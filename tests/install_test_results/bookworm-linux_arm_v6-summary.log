@@ -1,170 +1,0 @@
-System Information:
-Linux d32da7bedd42 6.10.6-zen1-1-zen #1 ZEN SMP PREEMPT_DYNAMIC Mon, 19 Aug 2024 17:02:05 +0000 armv7l GNU/Linux
-
-/etc/os-release:
-PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
-NAME="Debian GNU/Linux"
-VERSION_ID="12"
-VERSION="12 (bookworm)"
-VERSION_CODENAME=bookworm
-ID=debian
-HOME_URL="https://www.debian.org/"
-SUPPORT_URL="https://www.debian.org/support"
-BUG_REPORT_URL="https://bugs.debian.org/"
-
-Hit:1 http://deb.debian.org/debian bookworm InRelease
-Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
-Hit:3 http://deb.debian.org/debian-security bookworm-security InRelease
-Fetched 55.4 kB in 8s (6744 B/s)
-Reading package lists...
-Reading package lists...
-Building dependency tree...
-Reading state information...
-wget is already the newest version (1.21.3-1+b1).
-The following additional packages will be installed:
-  gnupg-l10n gnupg-utils gpg-agent gpg-wks-client gpg-wks-server gpgsm
-  libksba8 libnpth0 pinentry-curses
-Suggested packages:
-  dbus-user-session libpam-systemd pinentry-gnome3 tor parcimonie xloadimage
-  scdaemon pinentry-doc
-The following NEW packages will be installed:
-  apt-transport-https dirmngr gnupg gnupg-l10n gnupg-utils gpg-agent
-  gpg-wks-client gpg-wks-server gpgsm libksba8 libnpth0 pinentry-curses
-0 upgraded, 12 newly installed, 0 to remove and 0 not upgraded.
-Need to get 6071 kB of archives.
-After this operation, 12.9 MB of additional disk space will be used.
-Get:1 http://deb.debian.org/debian bookworm/main armel apt-transport-https all 2.6.1 [25.2 kB]
-Get:2 http://deb.debian.org/debian bookworm/main armel libksba8 armel 1.6.3-2 [107 kB]
-Get:3 http://deb.debian.org/debian bookworm/main armel libnpth0 armel 1.6-3 [17.8 kB]
-Get:4 http://deb.debian.org/debian bookworm/main armel dirmngr armel 2.2.40-1.1 [746 kB]
-Get:5 http://deb.debian.org/debian bookworm/main armel gnupg-l10n all 2.2.40-1.1 [1093 kB]
-Get:6 http://deb.debian.org/debian bookworm/main armel gnupg-utils armel 2.2.40-1.1 [841 kB]
-Get:7 http://deb.debian.org/debian bookworm/main armel pinentry-curses armel 1.2.1-1 [73.1 kB]
-Get:8 http://deb.debian.org/debian bookworm/main armel gpg-agent armel 2.2.40-1.1 [647 kB]
-Get:9 http://deb.debian.org/debian bookworm/main armel gpg-wks-client armel 2.2.40-1.1 [524 kB]
-Get:10 http://deb.debian.org/debian bookworm/main armel gpg-wks-server armel 2.2.40-1.1 [517 kB]
-Get:11 http://deb.debian.org/debian bookworm/main armel gpgsm armel 2.2.40-1.1 [634 kB]
-Get:12 http://deb.debian.org/debian bookworm/main armel gnupg all 2.2.40-1.1 [846 kB]
-debconf: delaying package configuration, since apt-utils is not installed
-Fetched 6071 kB in 4s (1612 kB/s)
-Selecting previously unselected package apt-transport-https.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 7738 files and directories currently installed.)
-Preparing to unpack .../00-apt-transport-https_2.6.1_all.deb ...
-Unpacking apt-transport-https (2.6.1) ...
-Selecting previously unselected package libksba8:armel.
-Preparing to unpack .../01-libksba8_1.6.3-2_armel.deb ...
-Unpacking libksba8:armel (1.6.3-2) ...
-Selecting previously unselected package libnpth0:armel.
-Preparing to unpack .../02-libnpth0_1.6-3_armel.deb ...
-Unpacking libnpth0:armel (1.6-3) ...
-Selecting previously unselected package dirmngr.
-Preparing to unpack .../03-dirmngr_2.2.40-1.1_armel.deb ...
-Unpacking dirmngr (2.2.40-1.1) ...
-Selecting previously unselected package gnupg-l10n.
-Preparing to unpack .../04-gnupg-l10n_2.2.40-1.1_all.deb ...
-Unpacking gnupg-l10n (2.2.40-1.1) ...
-Selecting previously unselected package gnupg-utils.
-Preparing to unpack .../05-gnupg-utils_2.2.40-1.1_armel.deb ...
-Unpacking gnupg-utils (2.2.40-1.1) ...
-Selecting previously unselected package pinentry-curses.
-Preparing to unpack .../06-pinentry-curses_1.2.1-1_armel.deb ...
-Unpacking pinentry-curses (1.2.1-1) ...
-Selecting previously unselected package gpg-agent.
-Preparing to unpack .../07-gpg-agent_2.2.40-1.1_armel.deb ...
-Unpacking gpg-agent (2.2.40-1.1) ...
-Selecting previously unselected package gpg-wks-client.
-Preparing to unpack .../08-gpg-wks-client_2.2.40-1.1_armel.deb ...
-Unpacking gpg-wks-client (2.2.40-1.1) ...
-Selecting previously unselected package gpg-wks-server.
-Preparing to unpack .../09-gpg-wks-server_2.2.40-1.1_armel.deb ...
-Unpacking gpg-wks-server (2.2.40-1.1) ...
-Selecting previously unselected package gpgsm.
-Preparing to unpack .../10-gpgsm_2.2.40-1.1_armel.deb ...
-Unpacking gpgsm (2.2.40-1.1) ...
-Selecting previously unselected package gnupg.
-Preparing to unpack .../11-gnupg_2.2.40-1.1_all.deb ...
-Unpacking gnupg (2.2.40-1.1) ...
-Setting up libksba8:armel (1.6.3-2) ...
-Setting up pinentry-curses (1.2.1-1) ...
-Setting up apt-transport-https (2.6.1) ...
-Setting up gpgsm (2.2.40-1.1) ...
-Setting up libnpth0:armel (1.6-3) ...
-Setting up dirmngr (2.2.40-1.1) ...
-Setting up gnupg-l10n (2.2.40-1.1) ...
-Setting up gnupg-utils (2.2.40-1.1) ...
-Setting up gpg-agent (2.2.40-1.1) ...
-Setting up gpg-wks-client (2.2.40-1.1) ...
-Setting up gpg-wks-server (2.2.40-1.1) ...
-Setting up gnupg (2.2.40-1.1) ...
-Processing triggers for libc-bin (2.36-9+deb12u7) ...
-Warning: apt-key is deprecated. Manage keyring files in trusted.gpg.d instead (see apt-key(8)).
-Executing: /tmp/apt-key-gpghome.C3OallFXVp/gpg.1.sh --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 5b2f88a91611e683
-gpg: key 5B2F88A91611E683: public key "Z-Wave.Me <info@z-wave.me>" imported
-gpg: Total number processed: 1
-gpg:               imported: 1
-Hit:1 http://deb.debian.org/debian bookworm InRelease
-Hit:2 http://deb.debian.org/debian bookworm-updates InRelease
-Hit:3 http://deb.debian.org/debian-security bookworm-security InRelease
-Get:4 https://repo.z-wave.me/z-way/raspbian bookworm InRelease [1808 B]
-Get:5 https://repo.z-wave.me/z-way/raspbian bookworm/main armhf Packages [1333 B]
-Fetched 3141 B in 17s (186 B/s)
-Reading package lists...
-W: https://repo.z-wave.me/z-way/raspbian/dists/bookworm/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
-Reading package lists...
-Building dependency tree...
-Reading state information...
-Some packages could not be installed. This may mean that you have
-requested an impossible situation or if you are using the unstable
-distribution that some required packages have not yet been created
-or been moved out of Incoming.
-The following information may help to resolve the situation:
-
-The following packages have unmet dependencies:
- z-way-server:armhf : Depends: libarchive13:armhf (>= 3.0) but it is not installable
-                      Depends: libssl1.1:armhf (>= 1.1.0) but it is not installable
-                      Depends: libxml2:armhf (>= 2.9.1) but it is not installable
-                      Depends: libc-ares2:armhf but it is not installable
-                      Depends: libavahi-compat-libdnssd-dev:armhf but it is not installable
-                      Depends: libwebsockets8:armhf but it is not installable or
-                               libwebsockets16:armhf but it is not installable or
-                               libwebsockets17:armhf but it is not installable
-                      Depends: libmosquitto1:armhf but it is not installable
-                      Depends: libcurl3-gnutls:armhf but it is not installable
-                      Depends: libnss-mdns:armhf but it is not installable
-E: Unable to correct problems, you have held broken packages.
-dpkg-query: no packages found matching z-way-server
-dpkg-query: no packages found matching webif
-dpkg-query: no packages found matching zbw
-======================================
-Дистрибутив: bookworm
-Архитектура: linux_arm_v6
-Результат: Провал
-======================================
-Ошибки обнаружены, выполняется поиск доступных библиотек...
-Поиск libssl:
-libssl-dev/stable 3.0.13-1~deb12u1 armel
-libssl-doc/stable 3.0.13-1~deb12u1 all
-libssl-ocaml/stable 0.5.13-1 armel
-libssl-ocaml-dev/stable 0.5.13-1 armel
-libssl-utils-clojure/stable 3.5.0-2 all
-libssl3/stable,now 3.0.13-1~deb12u1 armel [installed,automatic]
-Поиск libc-ares:
-libc-ares-dev/stable 1.18.1-3 armel
-libc-ares2/stable 1.18.1-3 armel
-Поиск libavahi:
-libavahi-client-dev/stable 0.8-10 armel
-libavahi-client3/stable 0.8-10 armel
-libavahi-common-data/stable 0.8-10 armel
-libavahi-common-dev/stable 0.8-10 armel
-libavahi-common3/stable 0.8-10 armel
-libavahi-compat-libdnssd-dev/stable 0.8-10 armel
-libavahi-compat-libdnssd1/stable 0.8-10 armel
-libavahi-core-dev/stable 0.8-10 armel
-libavahi-core7/stable 0.8-10 armel
-libavahi-glib-dev/stable 0.8-10 armel
-libavahi-glib1/stable 0.8-10 armel
-libavahi-gobject-dev/stable 0.8-10 armel
-libavahi-gobject0/stable 0.8-10 armel
-libavahi-ui-gtk3-0/stable 0.8-10 armel
-libavahi-ui-gtk3-dev/stable 0.8-10 armel
-Поиск libwebsockets:

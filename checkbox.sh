@@ -26,7 +26,7 @@ done
 
 # Initial cursor position
 cursor_x=-1  # Start with the global row
-cursor_y=1   # Start with the first non-global column
+cursor_y=0   # Start with the first non-global column
 
 # Function to draw a cell
 distSelector_draw_cell() {
@@ -178,7 +178,36 @@ distSelector_toggle_selection() {
     fi
 }
 
-# Main loop
+# Функция для получения выбранных дистрибутивов
+distSelector_get_selected_distributions() {
+    selected_distributions=()
+    for ((i=0; i<${#distributions[@]}; i++)); do
+        for ((j=1; j<$columns; j++)); do
+            if [[ ${table[$i,$j]} -eq 1 ]]; then
+                selected_distributions+=("${distributions[$i]}")
+                break  # Один раз за строку (дистрибутив) достаточно
+            fi
+        done
+    done
+    echo "${selected_distributions[@]}"
+}
+
+# Функция для получения выбранных архитектур
+distSelector_get_selected_architectures() {
+    selected_architectures=()
+    for ((j=1; j<$columns; j++)); do
+        for ((i=0; i<${#distributions[@]}; i++)); do
+            if [[ ${table[$i,$j]} -eq 1 ]]; then
+                selected_architectures+=("${architectures[$j]}")
+                break  # Один раз за колонку (архитектуру) достаточно
+            fi
+        done
+    done
+    echo "${selected_architectures[@]}"
+}
+
+
+# Основной цикл взаимодействия
 distSelector_draw_table
 while true; do
     IFS= read -rsn1 key
@@ -198,11 +227,10 @@ while true; do
     distSelector_draw_table
 done
 
-# Final output
 clear
-echo "Selected options:"
-for ((i=0; i<$rows; i++)); do
-    for ((j=1; j<$columns; j++)); do
-        [[ ${table[$i,$j]} -eq 1 ]] && echo "Test on ${distributions[$i]} for ${architectures[$j]}"
-    done
-done
+#echo "Selected options:"
+#for ((i=0; i<$rows; i++)); do
+#    for ((j=1; j<$columns; j++)); do
+#        [[ ${table[$i,$j]} -eq 1 ]] && echo "Test on ${distributions[$i]} for ${architectures[$j]}"
+#    done
+#done
