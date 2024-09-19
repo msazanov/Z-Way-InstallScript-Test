@@ -1,184 +1,272 @@
 #!/bin/bash
 
-# Source the checkbox.sh script to capture user selections
+
+
+
+# Подключаем скрипт checkbox.sh
 source "$(dirname "$0")/checkbox.sh"
 
-# Ensure the selection process is invoked properly
-distSelector_draw_table  # This will display the selection interface
+# Запускаем интерфейс выбора
+distSelector_run
 
-# Capture selected distributions and architectures after selection
+# Получаем выбранные дистрибутивы и архитектуры
 selected_distributions=($(distSelector_get_selected_distributions))
 selected_architectures=($(distSelector_get_selected_architectures))
 
-# If "All" is selected for architectures, use all available architectures
-if [[ " ${selected_architectures[@]} " =~ " All " ]]; then
-    selected_architectures=("armv6l" "armv7" "aarch64" "x86")
+# Проверяем выбор
+if [[ ${#selected_distributions[@]} -eq 0 || ${#selected_architectures[@]} -eq 0 ]]; then
+    echo "Не выбраны дистрибутивы или архитектуры. Программа завершена."
+    exit 1
 fi
 
-# Use the selected distributions and architectures
+# Используем выбранные дистрибутивы и архитектуры
 DISTROS=("${selected_distributions[@]}")
 ARCHITECTURES=("${selected_architectures[@]}")
 
-# Now ask how many parallel builds can be run
-read -p "Сколько сборок можно запускать параллельно? " MAX_PARALLEL
+# Спрашиваем количество параллельных сборок
+read -p "Сколько сборок можно запускать параллельно? (по умолчанию 4) " MAX_PARALLEL
 
-# Create timestamp for log folder
+# Проверяем и устанавливаем MAX_PARALLEL
+if [[ -z "$MAX_PARALLEL" ]]; then
+    MAX_PARALLEL=4
+fi
+if ! [[ "$MAX_PARALLEL" =~ ^[0-9]+$ ]] || [[ "$MAX_PARALLEL" -lt 1 ]]; then
+    echo "Некорректное значение, устанавливаем MAX_PARALLEL=4"
+    MAX_PARALLEL=4
+fi
+
+# Создаём директории и файлы логов
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
 LOG_DIR="install_test_results/$TIMESTAMP"
 FULL_LOG_FILE="$LOG_DIR/Full.log"
-
-# Clear screen on exit
-trap "tput reset; exit" SIGINT SIGTERM
-
-# Create log directory if it doesn't exist
 mkdir -p "$LOG_DIR"
-
-# Create or clear the full log file
 echo "Полные логи выполнения" > "$FULL_LOG_FILE"
 
-# Function to clear the current line in the terminal
+# Инициализируем массивы
+declare -A statuses
+declare -A start_times
+declare -A end_times
+declare -A TASK_ROW
+declare -A running_tasks_pids
+
+TASKS=()
+
+# Заполняем TASKS и инициализируем статусы
+for arch in "${ARCHITECTURES[@]}"; do
+    for distro in "${DISTROS[@]}"; do
+        TASKS+=("$distro|$arch")
+        statuses["$distro-$arch"]="QUEUE"
+    done
+done
+
+# Функция для очистки текущей строки в терминале
 clear_line() {
-    tput el
+    tput el      # Очищаем от курсора до конца строки
+    tput el1     # Очищаем от начала строки до курсора
 }
 
-# Function to move the cursor to a specific line in the table and update it
+
+# Функция для форматирования времени
+format_time() {
+    local start_time=$1
+    local end_time=$2
+    if [[ -z "$start_time" ]]; then
+        echo "00:00:00"
+        return
+    fi
+    if [[ -z "$end_time" ]]; then
+        end_time=$(date +%s)
+    fi
+    local elapsed=$((end_time - start_time))
+    printf "%02d:%02d:%02d" $((elapsed/3600)) $(((elapsed/60)%60)) $((elapsed%60))
+}
+
+# Функция для получения прошедшего времени для задачи
+get_elapsed_time() {
+    local distro=$1
+    local arch=$2
+    local status=${statuses["$distro-$arch"]}
+    local start_time=${start_times["$distro-$arch"]}
+    local end_time=${end_times["$distro-$arch"]}
+
+    if [[ "$status" == "QUEUE" || -z "$start_time" ]]; then
+        echo "00:00:00"
+    elif [[ "$status" == "TESTING" ]]; then
+        format_time "$start_time"
+    elif [[ "$status" == "PASS" || "$status" == "FAIL" || "$status" == "WARNING" ]]; then
+        format_time "$start_time" "$end_time"
+    else
+        echo "00:00:00"
+    fi
+}
+
+# Функция для обновления строки в таблице
 update_row() {
     local row=$1
     local distro=$2
     local arch=$3
     local status=$4
-    local time=$5
+
+    # Получаем прошедшее время
+    local elapsed_time=$(get_elapsed_time "$distro" "$arch")
+
+    # Определяем цвет в зависимости от статуса
+    local color_reset="\e[0m"
+    local color
+    case "$status" in
+        "PASS")
+            color="\e[32m"  # Зеленый
+            ;;
+        "FAIL")
+            color="\e[31m"  # Красный
+            ;;
+        "TESTING")
+            color="\e[33m"  # Желтый
+            ;;
+        "QUEUE")
+            color="\e[34m"  # Синий
+            ;;
+        *)
+            color="\e[0m"   # Сброс цвета
+            ;;
+    esac
 
     # Перемещаем курсор в нужную строку, очищаем строку и выводим обновленные данные
     tput cup $row 0
     clear_line
-    printf "%-20s | %-10s | %-10s | %-8s\n" "$distro" "$arch" "$status" "$time"
+    printf "%-20s | %-12s | ${color}%-10s${color_reset} | %-8s\n" "$distro" "$arch" "$status" "$elapsed_time"
 }
 
-update_testing_time() {
-    for TASK in "${TASKS[@]}"; do
-        DISTRO=$(echo $TASK | cut -d'|' -f1)
-        ARCH=$(echo $TASK | cut -d'|' -f2)
-        # Обновляем время только для задач в статусе TESTING
-        if [[ "${statuses["$DISTRO-$ARCH"]}" == "TESTING" ]]; then
-            elapsed_time=$(format_time ${start_times["$DISTRO-$ARCH"]})
-            update_row ${TASK_ROW["$DISTRO-$ARCH"]} "$DISTRO" "$ARCH" "TESTING" "$elapsed_time"
+update_running_tasks() {
+    for task in "${!running_tasks_pids[@]}"; do
+        pid=${running_tasks_pids["$task"]}
+        if ! kill -0 $pid 2>/dev/null; then
+            # Процесс завершился, удаляем его из массива
+            unset running_tasks_pids["$task"]
         fi
     done
 }
 
-# Function to clear the current line in the terminal
-clear_line() {
-    tput el
-}
 
-# Function to initialize the table
+# Функция для инициализации таблицы
 init_table() {
     tput clear
     tput cup 0 0
-    echo "Дистрибутив         | Архитектура | Статус     | Время"
-    echo "------------------------------------------------------"
+    echo "Дистрибутив         | Архитектура  | Статус     | Время"
+    echo "-------------------------------------------------------"
     local line=2
     for TASK in "${TASKS[@]}"; do
-        DISTRO=$(echo $TASK | cut -d'|' -f1)
-        ARCH=$(echo $TASK | cut -d'|' -f2)
-        update_row $line "$DISTRO" "$ARCH" "QUEUE" "00:00:00"
-        TASK_ROW["$DISTRO-$ARCH"]=$line  # Store row number for later updates
+        distro=$(echo $TASK | cut -d'|' -f1)
+        arch=$(echo $TASK | cut -d'|' -f2)
+        update_row $line "$distro" "$arch" "QUEUE"
+        TASK_ROW["$distro-$arch"]=$line  # Store row number for later updates
         line=$((line + 1))
     done
 }
 
+# Функция для обновления времени задач в состоянии TESTING
+update_testing_time() {
+    for TASK in "${TASKS[@]}"; do
+        distro=$(echo $TASK | cut -d'|' -f1)
+        arch=$(echo $TASK | cut -d'|' -f2)
+        # Обновляем время только для задач в статусе TESTING
+        if [[ "${statuses["$distro-$arch"]}" == "TESTING" ]]; then
+            update_row ${TASK_ROW["$distro-$arch"]} "$distro" "$arch" "TESTING"
+        fi
+    done
+}
 
-check_and_update_status() {
+# Функция для чтения статуса из файла .progress
+get_status_from_progress() {
     local distro=$1
     local arch=$2
-    local row=$3
-
     local progress_file="$LOG_DIR/$distro-$arch/.progress"
-    local current_status=$(get_status_from_progress "$distro" "$arch")
 
-    # Если статус изменился на PASS, FAIL или WARNING, обновляем массив и строку таблицы
-    if [[ "$current_status" != "${statuses["$distro-$arch"]}" ]]; then
-        statuses["$distro-$arch"]="$current_status"
-        elapsed_time=$(format_time ${start_times["$distro-$arch"]})
-        update_row $row "$distro" "$arch" "$current_status" "$elapsed_time"
-        echo "Обновлён статус для $distro-$arch: $current_status" >> "$FULL_LOG_FILE"
+    if [[ ! -f "$progress_file" ]]; then
+        echo "QUEUE"
+    else
+        local status=$(jq -r '.status' "$progress_file")
+        echo "$status"
     fi
 }
 
+# Функция для получения времени из .progress
+get_times_from_progress() {
+    local distro=$1
+    local arch=$2
+    local progress_file="$LOG_DIR/$distro-$arch/.progress"
 
-# Function to format elapsed time
-format_time() {
-    local start_time=$1
-    if [[ -z "$start_time" ]]; then
-        echo "00:00:00"
-        return
-    fi
-    local end_time=$(date +%s)
-    local elapsed=$((end_time - start_time))
-    printf "%02d:%02d:%02d" $((elapsed/3600)) $(((elapsed/60)%60)) $((elapsed%60))
-}
+    if [[ -f "$progress_file" ]]; then
+        local start_time=$(jq -r '.start_time' "$progress_file")
+        local end_time=$(jq -r '.end_time' "$progress_file")
 
-# Initialize status for each test
-declare -A statuses
-declare -A start_times
-declare -A completed_tasks
-declare -A TASK_ROW  # Store the row number for each task
-TASKS=()
-
-# Заполняем массив с заданиями для тестирования
-for ARCH in "${ARCHITECTURES[@]}"; do
-    for DISTRO in "${DISTROS[@]}"; do
-        TASKS+=("$DISTRO|$ARCH")
-        statuses["$DISTRO-$ARCH"]="QUEUE"
-    done
-done
-
-# Function to check if container exists and remove it
-remove_existing_container() {
-    local container_name=$1
-
-    if [ "$(docker ps -a -q -f name="^/${container_name}$")" ]; then
-        echo "Контейнер с именем $container_name уже существует. Удаляем контейнер..." >> "$FULL_LOG_FILE"
-        docker rm -f "$container_name" >> "$FULL_LOG_FILE" 2>&1
+        # Обновляем массивы
+        if [[ "$start_time" != "null" ]]; then
+            start_times["$distro-$arch"]=$start_time
+        fi
+        if [[ "$end_time" != "null" ]]; then
+            end_times["$distro-$arch"]=$end_time
+        fi
     fi
 }
 
-# Function to update the .progress file with error redirection to log
+# Функция для обновления статуса в файле .progress
 update_progress_status() {
     local distro=$1
     local arch=$2
+    local status=$3
     local progress_file="$LOG_DIR/$distro-$arch/.progress"
     local log_dir="$LOG_DIR/$distro-$arch"
 
     # Создаем директорию, если она не существует
     mkdir -p "$log_dir" 2>> "$FULL_LOG_FILE"
 
-    # Обновляем файл .progress и перенаправляем ошибки в лог
-    echo "$3" > "$progress_file" 2>> "$FULL_LOG_FILE"
-}
+    # Получаем текущее время
+    local current_time=$(date +%s)
 
-# Function to read the status from .progress file
-get_status_from_progress() {
-    local distro=$1
-    local arch=$2
-    local progress_file="$LOG_DIR/$distro-$arch/.progress"
-
-    # Если файл .progress не существует, возвращаем статус QUEUE
-    if [[ ! -f "$progress_file" ]]; then
-        echo "QUEUE"
+    # Если статус TESTING, записываем время начала
+    if [[ "$status" == "TESTING" ]]; then
+        # Записываем статус и время начала
+        echo "{\"status\":\"$status\",\"start_time\":$current_time,\"end_time\":null}" > "$progress_file"
+    elif [[ "$status" == "PASS" || "$status" == "FAIL" || "$status" == "WARNING" ]]; then
+        # Читаем предыдущие данные
+        if [[ -f "$progress_file" ]]; then
+            local start_time=$(jq '.start_time' "$progress_file")
+        else
+            local start_time=$current_time
+        fi
+        # Записываем статус, время начала и окончания
+        echo "{\"status\":\"$status\",\"start_time\":$start_time,\"end_time\":$current_time}" > "$progress_file"
     else
-        cat "$progress_file" 2>> "$FULL_LOG_FILE"
+        # Для других статусов
+        echo "{\"status\":\"$status\",\"start_time\":null,\"end_time\":null}" > "$progress_file"
     fi
 }
 
+# Функция для проверки и обновления статуса задачи
+check_and_update_status() {
+    local distro=$1
+    local arch=$2
+    local row=$3
 
+    local current_status=$(get_status_from_progress "$distro" "$arch")
+
+    if [[ "$current_status" != "${statuses["$distro-$arch"]}" ]]; then
+        statuses["$distro-$arch"]="$current_status"
+        # Получаем времена из .progress
+        get_times_from_progress "$distro" "$arch"
+
+        update_row $row "$distro" "$arch" "$current_status"
+        echo "Обновлён статус для $distro-$arch: $current_status" >> "$FULL_LOG_FILE"
+    fi
+}
+
+# Функция для запуска контейнера
 run_container() {
     local distro=$1
     local arch=$2
     local row=$3
 
-    local progress_file="$LOG_DIR/$distro-$arch/.progress"
     local current_status=$(get_status_from_progress "$distro" "$arch")
 
     # Проверяем статус контейнера
@@ -190,99 +278,72 @@ run_container() {
         return
     fi
 
-    # Если статус QUEUE, проверяем количество запущенных задач
-    running_tasks=$(jobs -r | wc -l)
-    if [[ $running_tasks -ge $MAX_PARALLEL ]]; then
-        echo "Максимальное количество задач запущено, откладываем запуск $distro-$arch." >> "$FULL_LOG_FILE"
-        return
-    fi
-
-    # Обновляем статус на TESTING
+ # Обновляем статус на TESTING
     update_progress_status "$distro" "$arch" "TESTING"
     statuses["$distro-$arch"]="TESTING"
-    start_times["$distro-$arch"]=$(date +%s)
-
-    # Замена двоеточия на дефис в имени контейнера
-    local safe_container_name="${distro//:/-}-$arch"
-
-    # Обновляем строку таблицы сразу после смены статуса
-    update_row ${TASK_ROW["$distro-$arch"]} "$distro" "$arch" "TESTING" "00:00:00"
+    get_times_from_progress "$distro" "$arch"
+    update_row ${TASK_ROW["$distro-$arch"]} "$distro" "$arch" "TESTING"
 
     # Создаем папку для логов текущего теста
     mkdir -p "$LOG_DIR/$distro-$arch"
     local container_log_file="$LOG_DIR/$distro-$arch/$distro-$arch.log"
 
     echo "Запуск теста для $distro на $arch" >> "$FULL_LOG_FILE"
-    echo "Команда: docker run --rm --name \"$safe_container_name\" \"$distro\"" >> "$container_log_file"
 
-    # Запуск контейнера с командой, которая генерирует вывод (например, uname -a)
-    docker run --rm --name "$safe_container_name" "$distro" bash -c "uname -a && sleep $((RANDOM % 5 + 5))" >> "$container_log_file" 2>&1
-    
-    # Проверяем результат и обновляем статус
-    if [[ $? -eq 0 ]]; then
-        update_progress_status "$distro" "$arch" "PASS"
-        statuses["$distro-$arch"]="PASS"
-        echo "Контейнер $distro-$arch успешно завершен." >> "$FULL_LOG_FILE"
-        echo "Контейнер $distro-$arch успешно завершен." >> "$container_log_file"
-    else
-        update_progress_status "$distro" "$arch" "FAIL"
-        statuses["$distro-$arch"]="FAIL"
-        echo "Контейнер $distro-$arch завершился с ошибкой." >> "$FULL_LOG_FILE"
-        echo "Контейнер $distro-$arch завершился с ошибкой." >> "$container_log_file"
-    fi
+    # Запуск контейнера в фоне
+    {
+        # Ваши команды для запуска контейнера
+        docker run --rm --name "${distro//:/-}-$arch" "$distro" bash -c "uname -a && sleep $((RANDOM % 5 + 5))" >> "$container_log_file" 2>&1
+        local exit_code=$?
 
-    # Обновляем строку таблицы
-    elapsed_time=$(format_time ${start_times["$distro-$arch"]})
-    update_row $row "$distro" "$arch" "${statuses["$distro-$arch"]}" "$elapsed_time"
+        # Проверяем результат и обновляем статус
+        if [[ $exit_code -eq 0 ]]; then
+            update_progress_status "$distro" "$arch" "PASS"
+        else
+            update_progress_status "$distro" "$arch" "FAIL"
+        fi
+
+        # Получаем время окончания из .progress
+        get_times_from_progress "$distro" "$arch"
+        local elapsed_time=$(format_time ${start_times["$distro-$arch"]} ${end_times["$distro-$arch"]})
+
+        echo "Контейнер $distro-$arch завершен со статусом ${statuses["$distro-$arch"]} за $elapsed_time." >> "$FULL_LOG_FILE"
+        echo "Контейнер $distro-$arch завершен со статусом ${statuses["$distro-$arch"]} за $elapsed_time." >> "$container_log_file"
+
+        # Обновляем строку таблицы
+        update_row $row "$distro" "$arch" "${statuses["$distro-$arch"]}"
+
+        # Фоновый процесс завершается здесь
+    } &
+    # Сохраняем PID запущенного процесса
+    running_tasks_pids["$distro-$arch"]=$!
 }
 
 
 
 
-
-# Function to check the status from the .progress file and update the status if necessary
-check_and_update_status() {
-    local distro=$1
-    local arch=$2
-    local row=$3
-
-    local progress_file="$LOG_DIR/$distro-$arch/.progress"
-    local current_status=$(get_status_from_progress "$distro" "$arch")
-
-    # Если статус изменился на PASS, FAIL или WARNING, обновляем массив и строку таблицы
-    if [[ "$current_status" != "${statuses["$distro-$arch"]}" ]]; then
-        statuses["$distro-$arch"]="$current_status"
-        elapsed_time=$(format_time ${start_times["$distro-$arch"]})
-        update_row $row "$distro" "$arch" "$current_status" "$elapsed_time"
-        echo "Обновлён статус для $distro-$arch: $current_status" >> "$FULL_LOG_FILE"
-    fi
-}
-
-# Main testing loop: управляющий параллельными сборками
+# Основной цикл тестирования
 start_next_task() {
-    local line=2  # Строки начинаются после заголовка
-
     while true; do
-        running_tasks=$(jobs -r | wc -l)
+        # Обновляем массив запущенных задач
+        update_running_tasks
+
+        # Обновляем количество запущенных задач
+        running_tasks=${#running_tasks_pids[@]}
 
         # Выводим в лог текущее количество запущенных задач
         echo "Текущее количество запущенных задач: $running_tasks" >> "$FULL_LOG_FILE"
-        
+
         if [[ $running_tasks -lt $MAX_PARALLEL ]]; then
             for TASK in "${TASKS[@]}"; do
-                DISTRO=$(echo $TASK | cut -d'|' -f1)
-                ARCH=$(echo $TASK | cut -d'|' -f2)
+                distro=$(echo $TASK | cut -d'|' -f1)
+                arch=$(echo $TASK | cut -d'|' -f2)
 
-                # Проверяем, был ли контейнер уже завершён со статусом PASS, FAIL, или WARNING
-                if [[ "${statuses["$DISTRO-$ARCH"]}" == "PASS" || "${statuses["$DISTRO-$ARCH"]}" == "FAIL" || "${statuses["$DISTRO-$ARCH"]}" == "WARNING" ]]; then
-                    continue  # Переходим к следующей задаче, если контейнер завершен
-                fi
-
-                # Проверяем, чтобы контейнеры с статусом QUEUE были запущены
-                if [[ "${statuses["$DISTRO-$ARCH"]}" == "QUEUE" ]]; then
-                    echo "Запуск задачи для $DISTRO на $ARCH" >> "$FULL_LOG_FILE"
-                    run_container "$DISTRO" "$ARCH" ${TASK_ROW["$DISTRO-$ARCH"]} &
-                    running_tasks=$(jobs -r | wc -l)
+                if [[ "${statuses["$distro-$arch"]}" == "QUEUE" ]]; then
+                    echo "Запуск задачи для $distro на $arch" >> "$FULL_LOG_FILE"
+                    run_container "$distro" "$arch" ${TASK_ROW["$distro-$arch"]}
+                    running_tasks_pids["$distro-$arch"]=$!  # Сохраняем PID
+                    running_tasks=$((running_tasks + 1))
                     if [[ $running_tasks -ge $MAX_PARALLEL ]]; then
                         break
                     fi
@@ -295,21 +356,19 @@ start_next_task() {
 
         # Проверяем текущий статус каждой задачи и обновляем, если он изменился
         for TASK in "${TASKS[@]}"; do
-            DISTRO=$(echo $TASK | cut -d'|' -f1)
-            ARCH=$(echo $TASK | cut -d'|' -f2)
-            check_and_update_status "$DISTRO" "$ARCH" ${TASK_ROW["$DISTRO-$ARCH"]}
+            distro=$(echo $TASK | cut -d'|' -f1)
+            arch=$(echo $TASK | cut -d'|' -f2)
+            check_and_update_status "$distro" "$arch" ${TASK_ROW["$distro-$arch"]}
         done
 
         sleep 1  # Ожидание перед следующим обновлением времени
 
-        # Проверка завершения всех задач: если все в статусе PASS, FAIL, или WARNING
+        # Проверка завершения всех задач
         all_done=true
         for TASK in "${TASKS[@]}"; do
-            DISTRO=$(echo $TASK | cut -d'|' -f1)
-            ARCH=$(echo $TASK | cut -d'|' -f2)
-
-            # Если есть хотя бы одна задача в статусе QUEUE или TESTING, продолжаем тест
-            if [[ "${statuses["$DISTRO-$ARCH"]}" == "QUEUE" || "${statuses["$DISTRO-$ARCH"]}" == "TESTING" ]]; then
+            distro=$(echo $TASK | cut -d'|' -f1)
+            arch=$(echo $TASK | cut -d'|' -f2)
+            if [[ "${statuses["$distro-$arch"]}" == "QUEUE" || "${statuses["$distro-$arch"]}" == "TESTING" ]]; then
                 all_done=false
                 break
             fi
@@ -328,6 +387,6 @@ start_next_task() {
 # Инициализируем таблицу
 init_table
 
-# Запуск первого набора задач
+# Запуск основного цикла
 start_next_task
 wait

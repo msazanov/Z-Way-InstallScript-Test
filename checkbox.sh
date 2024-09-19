@@ -1,5 +1,5 @@
 #!/bin/bash
-
+clear
 # Максимальная длина названия дистрибутива и архитектуры
 MAX_DISTRO_LENGTH=15
 MAX_ARCH_LENGTH=7
@@ -40,6 +40,67 @@ distSelector_draw_cell() {
     esac
 
     [[ $has_cursor -eq 1 ]] && printf "[%s]" "${content:1:5}" || printf "%s" "$content"
+}
+
+# Функция для получения выбранных дистрибутивов
+distSelector_get_selected_distributions() {
+    selected_distributions=()
+    for ((i=0; i<$rows; i++)); do
+        selected=false
+        for ((j=0; j<$columns; j++)); do
+            if [[ ${table[$i,$j]} -eq 1 ]]; then
+                selected=true
+                break
+            fi
+        done
+        if $selected; then
+            selected_distributions+=("${distributions[$i]}")
+        fi
+    done
+    echo "${selected_distributions[@]}"
+}
+
+# Функция для получения выбранных архитектур
+distSelector_get_selected_architectures() {
+    selected_architectures=()
+    for ((j=0; j<$columns; j++)); do
+        selected=false
+        for ((i=0; i<$rows; i++)); do
+            if [[ ${table[$i,$j]} -eq 1 ]]; then
+                selected=true
+                break
+            fi
+        done
+        if $selected; then
+            selected_architectures+=("${architectures[$j]}")
+        fi
+    done
+    echo "${selected_architectures[@]}"
+}
+
+# Функция для запуска интерфейса выбора
+distSelector_run() {
+    clear
+    distSelector_draw_table
+    while true; do
+        IFS= read -rsn1 key
+        if [[ $key == " " ]]; then
+            distSelector_toggle_selection
+        elif [[ $key == $'\x1b' ]]; then
+            read -rsn2 -t 0.1 key_rest
+            key+="$key_rest"
+            case "$key" in
+                $'\x1b[A') cursor_x=$((cursor_x == -1 ? rows - 1 : cursor_x - 1)) ;;
+                $'\x1b[B') cursor_x=$((cursor_x == rows - 1 ? -1 : cursor_x + 1)) ;;
+                $'\x1b[D') cursor_y=$((cursor_y == 0 ? columns : cursor_y - 1)) ;;
+                $'\x1b[C') cursor_y=$((cursor_y == columns ? 0 : cursor_y + 1)) ;;
+            esac
+        elif [[ -z $key ]]; then
+            break
+        fi
+        distSelector_draw_table
+    done
+    clear
 }
 
 # Функция для переключения состояния всей таблицы
@@ -222,24 +283,10 @@ distSelector_toggle_selection() {
     distSelector_draw_global_checkboxes
 }
 
-# Основной цикл взаимодействия
-distSelector_draw_table
-while true; do
-    IFS= read -rsn1 key
-    if [[ $key == " " ]]; then
-        distSelector_toggle_selection
-    elif [[ $key == $'\x1b' ]]; then
-        read -rsn2 key
-        case "$key" in
-            "[A") cursor_x=$((cursor_x == -1 ? rows - 1 : cursor_x - 1)) ;;
-            "[B") cursor_x=$((cursor_x == rows - 1 ? -1 : cursor_x + 1)) ;;
-            "[D") cursor_y=$((cursor_y == 0 ? columns : cursor_y - 1)) ;;
-            "[C") cursor_y=$((cursor_y == columns ? 0 : cursor_y + 1)) ;;
-        esac
-    elif [[ -z $key ]]; then
-        break
-    fi
-    distSelector_draw_table
-done
+
 
 clear
+# Если скрипт запускается напрямую, запускаем интерфейс выбора
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    distSelector_run
+fi
