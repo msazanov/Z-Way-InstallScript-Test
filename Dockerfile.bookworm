@@ -10,3 +10,4 @@ RUN apt-get update && \
     wget procps gpg iproute2 openssh-client openssh-server sudo logrotate
 
 COPY tests /tests
+RUN chmod +x /tests/*.sh

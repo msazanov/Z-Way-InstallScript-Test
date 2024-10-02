@@ -8,4 +8,6 @@ RUN apt-get update && \
     apt-get install -qqy --no-install-recommends \
     ca-certificates curl \
     wget procps gpg iproute2 openssh-client openssh-server sudo logrotate
+
 COPY tests /tests
+RUN chmod +x /tests/*.sh
