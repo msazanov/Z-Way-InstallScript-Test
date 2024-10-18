@@ -1,0 +1,569 @@
+Full execution logs
+Current number of running tasks: 0
+Starting task for debian:bookworm on armv6l
+Starting tests for debian:bookworm on armv6l
+Starting task for debian:bullseye on armv6l
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for debian:bullseye on armv6l
+Starting task for debian:buster on armv6l
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for debian:buster on armv6l
+Starting task for ubuntu:focal on armv6l
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for ubuntu:focal on armv6l
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Updated status for debian:bookworm-armv6l: TESTING(1/3)
+Updated status for debian:bullseye-armv6l: TESTING(1/3)
+Updated status for debian:buster-armv6l: TESTING(1/3)
+Updated status for ubuntu:focal-armv6l: TESTING(1/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+Current number of running tasks: 4
+### Test 2/3 completed with exit code 0
+############################################
+
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+Updated status for debian:bookworm-armv6l: TESTING(2/3)
+### Test 2/3 completed with exit code 0
+############################################
+
+Updated status for debian:bullseye-armv6l: TESTING(3/3)
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+Updated status for debian:buster-armv6l: TESTING(2/3)
+Updated status for ubuntu:focal-armv6l: TESTING(3/3)
+### Test 3/3 completed with exit code 1
+############################################
+
+Container ubuntu:focal-armv6l completed with status FAIL(1/3) in 00:00:01.
+### Test 3/3 completed with exit code 1
+############################################
+
+Container debian:bullseye-armv6l completed with status FAIL(1/3) in 00:00:01.
+### Test 3/3 completed with exit code 1
+############################################
+
+Container debian:bookworm-armv6l completed with status FAIL(1/3) in 00:00:02.
+Current number of running tasks: 1
+Starting task for ubuntu:jammy on armv6l
+Starting tests for ubuntu:jammy on armv6l
+Starting task for ubuntu:noble on armv6l
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for ubuntu:noble on armv6l
+Starting task for debian:bookworm on armv7
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for debian:bookworm on armv7
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Updated status for debian:bookworm-armv6l: FAIL(1/3)
+Updated status for debian:bullseye-armv6l: FAIL(1/3)
+Updated status for ubuntu:focal-armv6l: FAIL(1/3)
+Updated status for ubuntu:jammy-armv6l: TESTING(1/3)
+Updated status for ubuntu:noble-armv6l: TESTING(1/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+Updated status for debian:bookworm-armv7: TESTING(1/3)
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 3/3 completed with exit code 1
+############################################
+
+Container debian:buster-armv6l completed with status FAIL(1/3) in 00:00:04.
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 3/3 completed with exit code 1
+############################################
+
+Container ubuntu:jammy-armv6l completed with status FAIL(1/3) in 00:00:01.
+Current number of running tasks: 2
+### Test 3/3 completed with exit code 1
+############################################
+
+Container ubuntu:noble-armv6l completed with status FAIL(1/3) in 00:00:01.
+Starting task for debian:bullseye on armv7
+Starting tests for debian:bullseye on armv7
+Starting task for debian:buster on armv7
+### Test 3/3 completed with exit code 1
+############################################
+
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Container debian:bookworm-armv7 completed with status FAIL(1/3) in 00:00:01.
+Starting tests for debian:buster on armv7
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Updated status for debian:buster-armv6l: FAIL(1/3)
+Updated status for ubuntu:jammy-armv6l: FAIL(1/3)
+Updated status for ubuntu:noble-armv6l: FAIL(1/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+Updated status for debian:bookworm-armv7: FAIL(1/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+Updated status for debian:bullseye-armv7: TESTING(2/3)
+Updated status for debian:buster-armv7: TESTING(2/3)
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 3/3 completed with exit code 1
+############################################
+
+Container debian:bullseye-armv7 completed with status FAIL(1/3) in 00:00:01.
+Current number of running tasks: 1
+Starting task for ubuntu:focal on armv7
+Starting tests for ubuntu:focal on armv7
+Starting task for ubuntu:jammy on armv7
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for ubuntu:jammy on armv7
+Starting task for ubuntu:noble on armv7
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for ubuntu:noble on armv7
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Updated status for debian:bullseye-armv7: FAIL(1/3)
+Updated status for ubuntu:focal-armv7: TESTING(1/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+Updated status for ubuntu:jammy-armv7: TESTING(1/3)
+Updated status for ubuntu:noble-armv7: TESTING(1/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 2/3 completed with exit code 0
+############################################
+
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 3/3 completed with exit code 1
+############################################
+
+Container ubuntu:focal-armv7 completed with status FAIL(1/3) in 00:00:01.
+### Test 3/3 completed with exit code 1
+############################################
+
+Container ubuntu:noble-armv7 completed with status FAIL(1/3) in 00:00:02.
+### Test 3/3 completed with exit code 1
+############################################
+
+### Test 3/3 completed with exit code 1
+############################################
+
+Container debian:buster-armv7 completed with status FAIL(1/3) in 00:00:04.
+Container ubuntu:jammy-armv7 completed with status FAIL(1/3) in 00:00:02.
+Current number of running tasks: 0
+Starting task for debian:bookworm on aarch64
+Starting tests for debian:bookworm on aarch64
+Starting task for debian:bullseye on aarch64
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for debian:bullseye on aarch64
+Starting task for debian:buster on aarch64
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for debian:buster on aarch64
+Starting task for ubuntu:focal on aarch64
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for ubuntu:focal on aarch64
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+Updated status for debian:buster-armv7: FAIL(1/3)
+Updated status for ubuntu:focal-armv7: FAIL(1/3)
+Updated status for ubuntu:jammy-armv7: FAIL(1/3)
+Updated status for ubuntu:noble-armv7: FAIL(1/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+Updated status for debian:bookworm-aarch64: TESTING(2/3)
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+Updated status for debian:bullseye-aarch64: TESTING(1/3)
+Updated status for debian:buster-aarch64: TESTING(2/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+Updated status for ubuntu:focal-aarch64: TESTING(1/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 3/3 completed with exit code 1
+############################################
+
+Container debian:bookworm-aarch64 completed with status FAIL(1/3) in 00:00:01.
+### Test 3/3 completed with exit code 1
+### Test 3/3 completed with exit code 1
+############################################
+############################################
+
+
+Container debian:bullseye-aarch64 completed with status FAIL(1/3) in 00:00:01.
+Container ubuntu:focal-aarch64 completed with status FAIL(1/3) in 00:00:01.
+Current number of running tasks: 1
+Starting task for ubuntu:jammy on aarch64
+Starting tests for ubuntu:jammy on aarch64
+Starting task for ubuntu:noble on aarch64
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for ubuntu:noble on aarch64
+Starting task for debian:bookworm on x86
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for debian:bookworm on x86
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Updated status for debian:bookworm-aarch64: FAIL(1/3)
+Updated status for debian:bullseye-aarch64: FAIL(1/3)
+Updated status for ubuntu:focal-aarch64: FAIL(1/3)
+Updated status for ubuntu:jammy-aarch64: TESTING(1/3)
+Updated status for ubuntu:noble-aarch64: TESTING(1/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+### Test 1/3 completed with exit code 0
+############################################
+### Test 1/3 completed with exit code 0
+
+############################################
+
+Updated status for debian:bookworm-x86: TESTING(1/3)
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+### Test 2/3 completed with exit code 0
+############################################
+
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 2/3 completed with exit code 0
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 3/3 completed with exit code 1
+############################################
+
+### Test 3/3 completed with exit code 1
+############################################
+
+### Test 3/3 completed with exit code 1
+############################################
+
+Container ubuntu:jammy-aarch64 completed with status FAIL(1/3) in 00:00:01.
+Container debian:buster-aarch64 completed with status FAIL(1/3) in 00:00:03.
+Container ubuntu:noble-aarch64 completed with status FAIL(1/3) in 00:00:01.
+### Test 3/3 completed with exit code 1
+############################################
+
+Container debian:bookworm-x86 completed with status FAIL(1/3) in 00:00:01.
+Current number of running tasks: 0
+Starting task for debian:bullseye on x86
+Starting tests for debian:bullseye on x86
+Starting task for debian:buster on x86
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for debian:buster on x86
+Starting task for ubuntu:focal on x86
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for ubuntu:focal on x86
+Starting task for ubuntu:jammy on x86
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Starting tests for ubuntu:jammy on x86
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Updated status for debian:buster-aarch64: FAIL(1/3)
+Updated status for ubuntu:jammy-aarch64: FAIL(1/3)
+Updated status for ubuntu:noble-aarch64: FAIL(1/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+Updated status for debian:bookworm-x86: FAIL(1/3)
+Updated status for debian:bullseye-x86: TESTING(2/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+Updated status for debian:buster-x86: TESTING(1/3)
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+Updated status for ubuntu:focal-x86: TESTING(1/3)
+Updated status for ubuntu:jammy-x86: TESTING(1/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 2/3 completed with exit code 0
+############################################
+
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 3/3 completed with exit code 1
+############################################
+
+Container debian:bullseye-x86 completed with status FAIL(1/3) in 00:00:01.
+### Test 3/3 completed with exit code 1
+############################################
+
+### Test 3/3 completed with exit code 1
+############################################
+
+Container ubuntu:focal-x86 completed with status FAIL(1/3) in 00:00:01.
+Container ubuntu:jammy-x86 completed with status FAIL(1/3) in 00:00:01.
+Current number of running tasks: 1
+Starting task for ubuntu:noble on x86
+Starting tests for ubuntu:noble on x86
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Updated status for debian:bullseye-x86: FAIL(1/3)
+Updated status for debian:buster-x86: TESTING(2/3)
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+Updated status for ubuntu:focal-x86: FAIL(1/3)
+Updated status for ubuntu:jammy-x86: FAIL(1/3)
+Updated status for ubuntu:noble-x86: TESTING(2/3)
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+### Test 3/3 completed with exit code 1
+############################################
+
+Container ubuntu:noble-x86 completed with status FAIL(1/3) in 00:00:01.
+### Test 3/3 completed with exit code 1
+############################################
+
+Container debian:buster-x86 completed with status FAIL(1/3) in 00:00:03.
+Current number of running tasks: 0
+Updated status for debian:buster-x86: FAIL(1/3)
+Updated status for ubuntu:noble-x86: FAIL(1/3)
+All tasks completed. Testing finished.

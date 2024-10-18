@@ -1,0 +1,34 @@
+############################################
+### Running test 1/2: 01_os-info.sh
+############################################
+Running uname test...
+Linux 747944cc25e5 6.11.3-zen1-1-zen #1 ZEN SMP PREEMPT_DYNAMIC Thu, 10 Oct 2024 20:11:02 +0000 x86_64 GNU/Linux
+PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+NAME="Debian GNU/Linux"
+VERSION_ID="12"
+VERSION="12 (bookworm)"
+VERSION_CODENAME=bookworm
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+### Test 1/2 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/2: 02_install_z-way_def.sh
+############################################
+[2024-10-18 02:57:58] Starting RaspbianInstall script...
+[2024-10-18 02:57:58] Current user: root
+[2024-10-18 02:57:58] Checking for wget and sudo...
+[2024-10-18 02:57:58] Current PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+[2024-10-18 02:57:58] Testing network connectivity...
+/tests/02_install_z-way_def.sh: line 27: ping: command not found
+[2024-10-18 02:57:58] Executing RaspbianInstall script...
+/tests/02_install_z-way_def.sh: line 31: sudo: command not found
+timeout: failed to run command 'wget': No such file or directory
+[2024-10-18 02:57:58] RaspbianInstall script completed successfully.
+### Test 2/2 completed with exit code 0
+############################################
+
+Container debian:bookworm-aarch64 completed with status PASS(2/2) in 00:00:01.

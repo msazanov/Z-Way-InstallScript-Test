@@ -1,0 +1,48 @@
+############################################
+### Running test 1/3: 01_os-info.sh
+############################################
+Running uname test...
+Linux 7e5c76f841c8 6.11.3-zen1-1-zen #1 ZEN SMP PREEMPT_DYNAMIC Thu, 10 Oct 2024 20:11:02 +0000 x86_64 GNU/Linux
+PRETTY_NAME="Debian GNU/Linux 10 (buster)"
+NAME="Debian GNU/Linux"
+VERSION_ID="10"
+VERSION="10 (buster)"
+VERSION_CODENAME=buster
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+### Test 1/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 2/3: 02_install_z-way_def.sh
+############################################
+[2024-10-18 02:57:25] Starting RaspbianInstall script...
+[2024-10-18 02:57:25] Current user: root
+[2024-10-18 02:57:25] Checking for wget and sudo...
+[2024-10-18 02:57:25] Current PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+[2024-10-18 02:57:25] Testing network connectivity...
+PING google.com (142.251.222.238) 56(84) bytes of data.
+64 bytes from kul08s19-in-f14.1e100.net (142.251.222.238): icmp_seq=1 ttl=108 time=67.9 ms
+64 bytes from kul08s19-in-f14.1e100.net (142.251.222.238): icmp_seq=2 ttl=108 time=83.8 ms
+64 bytes from kul08s19-in-f14.1e100.net (142.251.222.238): icmp_seq=3 ttl=108 time=102 ms
+
+--- google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 5ms
+rtt min/avg/max/mdev = 67.909/84.708/102.465/14.127 ms
+[2024-10-18 02:57:27] Executing RaspbianInstall script...
+/tests/02_install_z-way_def.sh: line 31: sudo: command not found
+timeout: failed to run command 'wget': No such file or directory
+[2024-10-18 02:57:27] RaspbianInstall script completed successfully.
+### Test 2/3 completed with exit code 0
+############################################
+
+############################################
+### Running test 3/3: 99_fail_example.sh
+############################################
+Running a failing test...
+### Test 3/3 completed with exit code 1
+############################################
+
+Container debian:buster-armv6l completed with status FAIL(1/3) in 00:00:04.
